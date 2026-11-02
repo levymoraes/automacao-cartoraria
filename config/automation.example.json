@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "documentEditingMode": "template-fields",
+  "developmentOnly": true,
+  "allowedDevelopmentWorkspaceId": "00000000-0000-4000-8000-000000000001",
+  "linear": {
+    "workspaceId": "00000000-0000-4000-8000-000000000001",
+    "teamId": "00000000-0000-4000-8000-000000000002",
+    "requestLabelId": null,
+    "readyStateIds": [
+      "00000000-0000-4000-8000-000000000003"
+    ],
+    "reviewStateId": "00000000-0000-4000-8000-000000000004",
+    "apiUrl": "https://api.linear.app/graphql",
+    "simulation": false
+  },
+  "openaiMode": "mock",
+  "paidApiEnabled": false,
+  "automaticEnabled": false,
+  "schedule": {
+    "timezone": "America/Sao_Paulo",
+    "hours": [
+      11,
+      16
+    ],
+    "catchUp": "query-all-eligible-on-start"
+  },
+  "maxIssuesPerBatch": 100,
+  "concurrency": 1,
+  "retention": {
+    "artifactsDays": 7,
+    "auditDays": 90,
+    "keepIdempotencyReceipts": true
+  },
+  "linearSecretFile": "/run/secrets/linear_api_key",
+  "openaiSecretFile": "/run/secrets/openai_api_key",
+  "openaiOverrides": {
+    "model": "gpt-6.1-terra",
+    "reasoning": {
+      "effort": "low"
+    },
+    "limits": {
+      "maxPdfPages": 100,
+      "maxTemplateCharacters": 200000
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "mode": "synthetic-only",
+  "networkEnabled": false,
+  "paidApiCallsEnabled": false,
+  "schedule": {
+    "enabled": false,
+    "timezone": "America/Bahia",
+    "hours": [
+      11,
+      16
+    ]
+  },
+  "limits": {
+    "maxFileBytes": 20971520,
+    "maxExpandedBytes": 83886080,
+    "maxEntries": 512,
+    "maxPartBytes": 8388608
+  },
+  "retention": {
+    "automaticDeletionEnabled": false
+  },
+  "modelRequestedForFutureIncrement": {
+    "id": "gpt-6-luna",
+    "service_tier": "default",
+    "reasoning": "xhigh",
+    "compatibilityVerified": true
+  }
+}

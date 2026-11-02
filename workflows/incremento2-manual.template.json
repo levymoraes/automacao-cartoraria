@@ -1,0 +1,17 @@
+{
+  "id": "cartorio-increment2-manual",
+  "name": "Cartorio Incremento 2 manual simulado",
+  "active": false,
+  "nodes": [
+    { "id": "manual", "name": "Acionamento manual", "type": "n8n-nodes-base.manualTrigger", "typeVersion": 1, "position": [0, 0], "parameters": {} },
+    { "id": "load", "name": "Carregar PDF e modelo ficticios", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [240, 0], "parameters": { "jsCode": "const fs = require('fs'); const payload = JSON.parse(fs.readFileSync('/work/input.json','utf8')); if(payload.mode!=='mock') throw new Error('WORKFLOW_MOCK_ONLY'); return [{json:payload}];" } },
+    { "id": "interpret", "name": "Interpretacao simulada e validacao JSON", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [500, 0], "parameters": { "jsCode": "__CARTORIO_BUNDLE__\ntry { const prepared = await Cartorio.interpretMock($input.first().json); return [{json:{ok:true,prepared}}]; } catch(e) { return [{json:{ok:false,status:'blocked',code:e.code||'INTERPRETATION_FAILED',simulation:true,apiCalls:0}}]; }" } },
+    { "id": "edit", "name": "Aplicar substituicoes e conferir DOCX", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [800, 0], "parameters": { "jsCode": "__CARTORIO_BUNDLE__\nconst data=$input.first().json; if(!data.ok)return [{json:data}]; try { const result=await Cartorio.applyMapping(data.prepared); return [{json:result.report,binary:{minuta:{data:result.bytes.toString('base64'),mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',fileName:'minuta-ficticia.docx'}}}]; }catch(e){return [{json:{status:'blocked',code:e.code||'DOCUMENT_VALIDATION_FAILED',simulation:true,apiCalls:0,documentGenerated:false}}];}" } }
+  ],
+  "connections": {
+    "Acionamento manual": { "main": [[{ "node": "Carregar PDF e modelo ficticios", "type": "main", "index": 0 }]] },
+    "Carregar PDF e modelo ficticios": { "main": [[{ "node": "Interpretacao simulada e validacao JSON", "type": "main", "index": 0 }]] },
+    "Interpretacao simulada e validacao JSON": { "main": [[{ "node": "Aplicar substituicoes e conferir DOCX", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "timezone": "America/Bahia", "executionTimeout": 120, "saveExecutionProgress": false, "saveDataSuccessExecution": "none", "saveDataErrorExecution": "none" }
+}

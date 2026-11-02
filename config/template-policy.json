@@ -1,0 +1,23 @@
+{
+  "mode": "literal-template",
+  "source": "Public demonstration policy",
+  "useExactSelectedTemplate": true,
+  "recreateDocument": false,
+  "rewriteClauses": false,
+  "createOrReplaceImages": false,
+  "preserveOriginalLogo": true,
+  "preserveFormattingAndStructure": true,
+  "deliverDraftWithMissingData": true,
+  "pendingAnnotationException": "Missing evidence is shown as a short red marker. Other template content is preserved.",
+  "replaceAllPreviousOperationVariables": true,
+  "requireReviewedCompleteVariableInventory": true,
+  "preserveParticipantRolesAndSpouses": true,
+  "blockDifferentParticipantComposition": true,
+  "protectInstitutionAndStaff": true,
+  "verifyNewValuesAndOldValueAbsence": true,
+  "unchangedVariableRequiresNewEvidence": true,
+  "changes": "Only explicitly authorized sensitive or variable data replacements, supported by source documents. During anonymization, only mapped sensitive data and personal metadata values.",
+  "missingEvidence": "Block and report the missing information. Never invent, infer identifiers or fill from the previous act.",
+  "apiOutput": "Proposed field replacements with source references and pending items only. Never return a rewritten document.",
+  "validation": "Compare every internal DOCX part against the exact template and authorized text changes. Original images must remain byte-identical."
+}

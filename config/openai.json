@@ -1,0 +1,29 @@
+{
+  "model": "gpt-6-luna",
+  "service_tier": "default",
+  "reasoning": { "effort": "xhigh" },
+  "store": false,
+  "deliverPendingDrafts": true,
+  "max_output_tokens": 96000,
+  "timeoutMs": 900000,
+  "codeInterpreterMemory": "1g",
+  "codeInterpreterSessionUsd": 0.03,
+  "limits": { "maxPdfBytes": 20971520, "maxPdfPages": 40, "maxTemplateCharacters": 80000, "maxResponseBytes": 2097152 },
+  "live": { "enabled": false, "budgetApprovalId": null, "maxCalls": 1, "maxBudgetUsd": 0 },
+  "pricing": {
+    "inputPerMillionUsd": 0.2,
+    "outputPerMillionUsd": 0.75,
+    "maxBillableInputTokens": 1050000,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "verifiedOn": "2026-10-31",
+    "note": "Conservative Standard long-context reservation for the full context and reasoning/output cap, without cache discounts. Explicit-only cache with no breakpoints. Estimate is not an invoice. Paid execution requires separate authorization."
+  },
+  "compatibility": {
+    "verifiedOn": "2026-10-30",
+    "modelReasoningStructuredOutputs": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "fastMode": "https://developers.openai.com/api/docs/guides/fast-mode",
+    "pdfInput": "https://developers.openai.com/api/docs/guides/file-inputs",
+    "noCacheWrites": "https://developers.openai.com/api/docs/guides/prompt-caching",
+    "liveExecutionVerified": false
+  }
+}

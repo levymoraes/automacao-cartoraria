@@ -1,0 +1,9 @@
+{
+  "verifiedOn": "2026-11-01",
+  "source": "https://developers.openai.com/api/docs/pricing",
+  "longContextThreshold": 272000,
+  "models": {
+    "gpt-6-luna": { "inputPerMillionUsd": 0.1, "outputPerMillionUsd": 0.5, "reasoning": ["high", "xhigh", "max"] },
+    "gpt-6.1-terra": { "inputPerMillionUsd": 1, "outputPerMillionUsd": 5, "reasoning": ["low", "medium", "high", "xhigh", "max"] }
+  }
+}

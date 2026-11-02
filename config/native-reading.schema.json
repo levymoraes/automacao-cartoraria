@@ -1,0 +1,27 @@
+{
+  "type": "object", "additionalProperties": false,
+  "required": ["templateSha256", "reviewedPages", "entities", "fields"],
+  "properties": {
+    "templateSha256": {"type":"string"},
+    "reviewedPages": {"type":"array", "items":{"$ref":"#/$defs/pages"}},
+    "entities": {"type":"array", "items":{"type":"object", "additionalProperties":false,
+      "required":["id","label","role","relatedEntityIds"], "properties":{
+        "id":{"type":"string"}, "label":{"type":"string"}, "role":{"type":"string"},
+        "relatedEntityIds":{"type":"array","items":{"type":"string"}}
+      }}},
+    "fields": {"type":"array", "items":{"type":"object", "additionalProperties":false,
+      "required":["id","entityId","label","oldValue","value","status","sources","rechecked","checkedPages"], "properties":{
+        "id":{"type":"string"}, "entityId":{"type":"string"}, "label":{"type":"string","maxLength":80},
+        "oldValue":{"type":"string","minLength":1}, "value":{"type":["string","null"]},
+        "status":{"type":"string","enum":["verified","not_located","absent","conflict","illegible"]},
+        "sources":{"type":"array","items":{"type":"object","additionalProperties":false,
+          "required":["documentId","page","quote"],"properties":{
+            "documentId":{"type":"string"},"page":{"type":"integer","minimum":1},"quote":{"type":"string","minLength":1}
+          }}},
+        "rechecked":{"type":"boolean"}, "checkedPages":{"type":"array","items":{"$ref":"#/$defs/pages"}}
+      }}}
+  },
+  "$defs": {"pages":{"type":"object","additionalProperties":false,"required":["documentId","pages"],"properties":{
+    "documentId":{"type":"string"},"pages":{"type":"array","items":{"type":"integer","minimum":1}}
+  }}}
+}

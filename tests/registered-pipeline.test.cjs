@@ -1,0 +1,25 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os'),{randomUUID}=require('node:crypto');
+const {semanticFixture}=require('./semantic-fixture.cjs');const {runBatch}=require('../src/automation.cjs'),{sha256}=require('../src/docx.cjs'),{digest}=require('../src/dynamic-template.cjs');
+async function setup(){
+ const f=await semanticFixture(),source=Buffer.from('ORIGINAL-DOC-EXCLUSIVAMENTE-FICTICIO'),issueId=randomUUID(),documentId=randomUUID(),requestId=randomUUID();
+ const model={id:'MODELO-TESTE',version:'1',actType:'compra-venda-urbano',origin:'user-supplied-original',format:'doc',status:'ready-local-mock',userApprovedUse:true,inventoryMode:'dynamic-per-request',sha256:sha256(source),convertedCandidate:{sha256:sha256(f.bytes)},source:{kind:'linear-document',documentId,documentTitle:'MODELOS DE MINUTAS',filename:'MODELO TESTE.doc'}};
+ const analysis={schemaVersion:1,templateSha256:sha256(f.bytes),entities:f.profile.operation.entities,fields:f.profile.fields.map(p=>({...p,category:p.property==='nome'?'person-name':p.property==='cpf'?'identity-document':'profession'})),coverage:f.profile.operation.coverage.map(c=>({...c,reviewed:true})),audit:{status:'passed',unmappedVariables:[]},pending:[]};
+ const truth={scenario:'completo',templateSha256:sha256(f.bytes),entities:f.plan.entities,facts:f.plan.replacements.map(r=>({slotId:r.entityId.replace('new-',''),property:r.property,status:'verified',value:r.value,evidence:[{page:1,value:r.value}],fieldIds:[r.fieldId]}))};
+ const mockResponse={status:'completed',output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(f.extraction)}]}]};
+ const fixture={scenario:'completo',modelId:model.id,localOnly:true,generatedFictionalPdf:true,templateSha256:sha256(f.bytes),pdfSha256:sha256(f.pdf),documents:f.documents,truth,truthSha256:digest(truth),mockResponseSha256:digest(mockResponse),analysisSha256:digest(analysis),payload:{scenario:'completo',mockAnalysis:analysis,mockResponse}};
+ const config={...require('../config/automation.example.json'),linear:{workspaceId:'workspace',teamId:'equipe',requestLabelId:'label',readyStateIds:['todo'],reviewStateId:'review'}};config.allowedDevelopmentWorkspaceId='workspace';
+ const issue={id:issueId,team:{id:'equipe'},state:{id:'todo'},labels:{nodes:[{id:'label'}]},description:'Vendedor e comprador conforme documentos ficticios.\n```cartorio-json\n'+JSON.stringify({requestId,templateId:model.id,templateVersion:'1',actType:model.actType})+'\n```',attachments:{nodes:[{id:'input',title:'novo.pdf',url:'https://uploads.linear.app/input.pdf',issue:{id:issueId}}]}};
+ let output,uploads=0,comments=0,reads=0;const linear={assertScope:async()=>({id:'workspace'}),readyIssues:async()=>[issueId],issue:async()=>issue,document:async()=>({title:'MODELOS DE MINUTAS',content:'[MODELO TESTE.doc](https://uploads.linear.app/model)'}),download:async url=>{reads++;return url.endsWith('/model')?source:url.endsWith('input.pdf')?f.pdf:output;},allocate:async()=>{uploads++;return {assetUrl:'https://uploads.linear.app/output',uploadUrl:'https://uploads.linear.app/output',headers:[]};},put:async(file,b)=>{output=b;},attach:async(id,url,title,metadata)=>{if(!issue.attachments.nodes.some(a=>a.url===url))issue.attachments.nodes.push({id:'output',url,title,metadata,issue:{id:issueId}});},comment:async()=>{comments++;},review:async()=>{issue.state.id='review';}};
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'registered-pipeline-'));
+ return {config,issue,model,fixture,source,options:{bundle:{config,catalog:[model],fixtures:[fixture],localTemplates:[{modelId:model.id,version:'1',originalSha256:model.sha256,sha256:sha256(f.bytes),docxBase64:f.bytes.toString('base64')}]},linear,stateRoot:path.join(dir,'state'),artifactRoot:path.join(dir,'artifacts'),secretReader:()=>assert.fail('OpenAI credential must not be read'),transport:()=>assert.fail('OpenAI must not be called')},counts:()=>({uploads,comments,reads})};
+}
+test('lote descobre inventario simulado por tarefa e entrega copia local sem perfil fixo no bundle',async()=>{
+ const f=await setup();assert.equal(f.fixture.payload.profile,undefined);const first=await runBatch(f.options),second=await runBatch(f.options);
+ assert.equal(first.results[0].status,'delivered-in-review');assert.equal(second.results[0].status,'skipped-not-eligible');assert.equal(f.counts().uploads,1);
+});
+test('originais reais em live ou copia local adulterada bloqueiam antes de upload',async()=>{
+ const f=await setup();f.config.openaiMode='live';f.config.paidApiEnabled=true;const result=await runBatch(f.options);assert.equal(result.results[0].code,'REGISTERED_TEMPLATE_LIVE_DISABLED');assert.equal(f.counts().uploads,0);
+ const g=await setup();g.options.bundle.localTemplates[0].docxBase64=Buffer.from('ADULTERADO').toString('base64');const bad=await runBatch(g.options);assert.equal(bad.results[0].code,'LOCAL_TEMPLATE_INTEGRITY_FAILED');assert.equal(g.counts().uploads,0);
+});

@@ -1,0 +1,348 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "templateSha256",
+    "documents",
+    "documentSegments",
+    "entities",
+    "observations",
+    "replacements",
+    "pending"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 2
+    },
+    "templateSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/document"
+      }
+    },
+    "documentSegments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/segment"
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/observation"
+      }
+    },
+    "replacements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/replacement"
+      }
+    },
+    "pending": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pending"
+      }
+    }
+  },
+  "$defs": {
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documentId",
+        "type",
+        "startPage",
+        "endPage",
+        "entityIds"
+      ],
+      "properties": {
+        "documentId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "identity",
+            "marriage",
+            "property",
+            "fiscal",
+            "payment",
+            "other"
+          ]
+        },
+        "startPage": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "endPage": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "entityIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sha256",
+        "pages"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "slotId",
+        "kind",
+        "role",
+        "spouseId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "slotId": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "person",
+            "property",
+            "transaction",
+            "marriage",
+            "organization"
+          ]
+        },
+        "role": {
+          "type": "string"
+        },
+        "spouseId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documentId",
+        "documentSha256",
+        "page",
+        "entityId",
+        "property",
+        "quote"
+      ],
+      "properties": {
+        "documentId": {
+          "type": "string"
+        },
+        "documentSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "property": {
+          "type": "string"
+        },
+        "quote": {
+          "type": "string"
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entityId",
+        "property",
+        "value",
+        "status",
+        "sources"
+      ],
+      "properties": {
+        "entityId": {
+          "type": "string"
+        },
+        "property": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "missing",
+            "conflict",
+            "illegible"
+          ]
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        }
+      }
+    },
+    "replacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fieldId",
+        "entityId",
+        "property",
+        "oldValue",
+        "value",
+        "part",
+        "paragraph",
+        "start",
+        "end",
+        "status",
+        "confirmedUnchanged",
+        "sources"
+      ],
+      "properties": {
+        "fieldId": {
+          "type": "string"
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "property": {
+          "type": "string"
+        },
+        "oldValue": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "part": {
+          "type": "string"
+        },
+        "paragraph": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "missing",
+            "conflict",
+            "illegible"
+          ]
+        },
+        "confirmedUnchanged": {
+          "type": "boolean"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        }
+      }
+    },
+    "pending": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "fieldId",
+        "entityId",
+        "documentId",
+        "page"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "fieldId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "entityId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "documentId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "page": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

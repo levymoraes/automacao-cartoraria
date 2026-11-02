@@ -1,0 +1,27 @@
+{
+  "name": "automacao-documental",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Automação documental com n8n, Linear, leitura estruturada por IA e auditoria de DOCX. Portfólio com demonstração local fictícia.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "pretest": "node scripts/build-schema.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "demo": "node scripts/demo.cjs",
+    "check": "node scripts/check-publication.cjs",
+    "workflows:build": "node scripts/build-automation.cjs"
+  },
+  "dependencies": {
+    "ajv": "8.17.1",
+    "docxtemplater": "3.71.1",
+    "jszip": "3.10.1",
+    "pdf-lib": "1.17.1",
+    "pizzip": "3.3.0",
+    "sax": "1.6.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}
