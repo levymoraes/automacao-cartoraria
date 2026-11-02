@@ -1,6 +1,6 @@
-# Automação documental autônoma
+# Automação cartorária autônoma
 
-[![Verificação local e privacidade](https://github.com/levymoraes/automacao-documental/actions/workflows/ci.yml/badge.svg)](https://github.com/levymoraes/automacao-documental/actions/workflows/ci.yml)
+[![Verificação local e privacidade](https://github.com/levymoraes/automacao-cartoraria/actions/workflows/ci.yml/badge.svg)](https://github.com/levymoraes/automacao-cartoraria/actions/workflows/ci.yml)
 
 Automação de minutas com **n8n, Node.js, Linear e leitura estruturada por IA**. Projeto implementado e validado de ponta a ponta: consulta a fila, identifica o modelo solicitado, processa os documentos, preenche o DOCX, registra pendências e entrega o arquivo para revisão humana.
 

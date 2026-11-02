@@ -1,5 +1,5 @@
 {
-  "name": "automacao-documental",
+  "name": "automacao-cartoraria",
   "version": "0.1.0",
   "private": true,
   "description": "Automação documental com n8n, Linear, leitura estruturada por IA e auditoria de DOCX. Portfólio com demonstração local fictícia.",
